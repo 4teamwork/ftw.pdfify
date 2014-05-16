@@ -10,4 +10,13 @@
       permission="zope2.View"
       />
 
+  <!-- Permission should be adjusted -->
+  <browser:page
+      name="pdfify_maintenance"
+      for="ftw.pdfify.interfaces.IPdfifyable"
+      class=".maintenance.PdfifyMaintenanceView"
+      permission="zope2.View"
+      allowed_attributes="start_pdf_conversion"
+      />
+
 </configure>
