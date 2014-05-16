@@ -1,0 +1,13 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="ftw.pdfify">
+
+  <browser:page
+      name="pdfify"
+      for="ftw.pdfify.interfaces.IPdfifyable"
+      class=".pdfify.PdfifyView"
+      permission="zope2.View"
+      />
+
+</configure>

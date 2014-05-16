@@ -3,10 +3,12 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="ftw.pdfify">
 
+  <include package=".browser" />
+
   <adapter factory=".pdf.Pdf" />
   <adapter factory=".storage.AnnotationsPdfStorage" />
 
-  <class class="plone.app.blob.content.ATBlob">
+  <class class="Products.ATContentTypes.content.file.ATFile">
     <implements interface="ftw.pdfify.interfaces.IPdfifyable" />
   </class>
 
