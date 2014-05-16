@@ -8,7 +8,8 @@
   <adapter factory=".pdf.Pdf" />
   <adapter factory=".storage.AnnotationsPdfStorage" />
 
-  <class class="Products.ATContentTypes.content.file.ATFile">
+
+  <class class="plone.app.blob.content.ATBlob">
     <implements interface="ftw.pdfify.interfaces.IPdfifyable" />
   </class>
 
