@@ -12,14 +12,17 @@ from zope.configuration import xmlconfig
 TESTING_CONVERSION_JOB_QUEUE = []
 
 
-def mocked_async_convert_job(url, uuid, filename, contenttype):
-    TESTING_CONVERSION_JOB_QUEUE.append(
-        {'url': url, 'uuid': uuid,
-         'filename': filename, 'contenttype': contenttype})
+
+class MockedConvertJob(object):
+
+    def delay(self, url, uuid, filename, contenttype):
+        TESTING_CONVERSION_JOB_QUEUE.append(
+            {'url': url, 'uuid': uuid,
+             'filename': filename, 'contenttype': contenttype})
 
 
 from ftw import pdfify
-pdfify.ASYNC_CONVERT_JOB = mocked_async_convert_job
+pdfify.ASYNC_CONVERT_JOB = MockedConvertJob()
 
 
 class PdfifyLayer(PloneSandboxLayer):
