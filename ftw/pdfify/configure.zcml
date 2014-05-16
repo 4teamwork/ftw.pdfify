@@ -12,4 +12,10 @@
     <implements interface="ftw.pdfify.interfaces.IPdfifyable" />
   </class>
 
+  <subscriber
+      for="ftw.pdfify.interfaces.IPdfifyable
+           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".handlers.start_pdf_conversion"
+      />
+
 </configure>
