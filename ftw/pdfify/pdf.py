@@ -30,6 +30,16 @@ class Pdf(object):
             return IPrimaryFieldInfo(self.context).value
 
     @property
+    def primary_download(self):
+        if safe_hasattr(self.context, 'getPrimaryField'):
+            field = self.context.getPrimaryField()
+            return field.index_html(self.context, disposition='attachment')
+        else:
+            value = IPrimaryFieldInfo(self.context).value
+            set_headers(value, self.request.response, filename=value.filename)
+            return stream_data(value)
+
+    @property
     def status(self):
         return self.storage.status
 
@@ -39,6 +49,7 @@ class Pdf(object):
 
     def generate_url(self):
         self.storage.token = self.generate_token()
+
         return '%s/pdfify?token=%s' % (
             self.context.absolute_url(), self.storage.token)
         self.context
@@ -62,16 +73,24 @@ class Pdf(object):
             self.storage.checksum = self.current_hash()
             self.storage.status = STATE_CONVERTING
 
-            ASYNC_CONVERT_JOB(self.generate_url(),
-                              IUUID(self.context),
-                              self.primary_value.filename,
-                              self.primary_value.content_type)
+            ASYNC_CONVERT_JOB.delay(self.generate_url(),
+                                    IUUID(self.context),
+                                    self.primary_value.filename,
+                                    self.primary_value.content_type)
 
     def store_pdf(self, data):
         self.storage.store(data)
         self.storage.status = STATE_OK
+        self.storage.store(data)
 
-    def pdf(self):
-        pdf = self.storage.retrieve()
-        filename = pdf._p_blob_uncommitted or pdf._blob.committed()
+    def pdf_download(self):
+        blob = self.storage.retrieve()
+        filename = blob._p_blob_uncommitted or blob.committed()
+
+        response = self.context.REQUEST.RESPONSE
+        response.setHeader("Content-Type", 'application/pdf')
+        response.setHeader("Content-Length", blob.__sizeof__())
+        response.setHeader("Content-disposition",
+                           'attachment; filename=test.pdf')
+
         return filestream_iterator(filename, 'rb')

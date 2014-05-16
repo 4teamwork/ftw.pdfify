@@ -1,4 +1,3 @@
-from ZPublisher.Iterators import filestream_iterator
 from ftw.pdfify.interfaces import IPdf
 from zExceptions import Unauthorized
 from zope.publisher.browser import BrowserView
@@ -26,9 +25,7 @@ class PdfifyView(BrowserView):
         raise Unauthorized
 
     def stream_orginal_document(self):
-        blob = IPdf(self.context).primary_value.blob
-        filename = blob._p_blob_uncommitted or blob.committed()
-        return filestream_iterator(filename, 'rb')
+        return IPdf(self.context).primary_download
 
     def put_pdf(self):
         data = self.request.get('data')

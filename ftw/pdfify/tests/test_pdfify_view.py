@@ -25,7 +25,7 @@ class TestPdfifyView(FunctionalTestCase):
     def test_get_request_is_handled_as_fetch_document(self, browser):
         browser.open( self.file, view='pdfify?token={0}'.format(self.token))
 
-        self.assertEquals('text/plain; charset=iso-8859-15',
+        self.assertEquals('application/msword',
                           browser.headers.get('content-type'))
         self.assertEquals('Test data', browser.contents)
 

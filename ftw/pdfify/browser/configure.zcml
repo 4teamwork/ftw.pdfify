@@ -7,7 +7,7 @@
       name="pdfify"
       for="ftw.pdfify.interfaces.IPdfifyable"
       class=".pdfify.PdfifyView"
-      permission="zope2.View"
+      permission="zope2.Public"
       />
 
   <!-- Permission should be adjusted -->
@@ -16,7 +16,8 @@
       for="ftw.pdfify.interfaces.IPdfifyable"
       class=".maintenance.PdfifyMaintenanceView"
       permission="zope2.View"
-      allowed_attributes="start_pdf_conversion"
+      allowed_attributes="start_pdf_conversion
+                          pdf"
       />
 
 </configure>
