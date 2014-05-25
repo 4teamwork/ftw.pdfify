@@ -22,4 +22,20 @@
                           status"
       />
 
+  <browser:page
+      for="ftw.file.interfaces.IFile"
+      name="file_pdf_view"
+      class=".file.FileView"
+      template="file.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="ftw.file.interfaces.IFile"
+      name="pdf_download"
+      class=".file.FileView"
+      attribute="pdf_download"
+      permission="zope2.View"
+      />
+
 </configure>
