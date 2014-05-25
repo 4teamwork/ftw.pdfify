@@ -1,3 +1,4 @@
+from os import fstat
 from ZODB.blob import Blob
 from ftw.pdfify.interfaces import IPdfStorage
 from ftw.pdfify.interfaces import IPdfifyable
@@ -5,7 +6,9 @@ from persistent.mapping import PersistentMapping
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapts
 from zope.interface import implements
-
+from plone.app.blob.interfaces import IBlobbable
+from plone.app.blob.field import ReuseBlob
+from plone.app.blob.utils import openBlob
 
 ANNOTATIONS_STORAGE_KEY = 'ftw.pdfify'
 
@@ -22,9 +25,11 @@ class AnnotationsPdfStorage(object):
 
     def store(self, data):
         blob = Blob()
-        _blob = blob.open('w')
-        _blob.write(data)
-        _blob.close()
+        blobbable = IBlobbable(data)
+        try:
+            blobbable.feed(blob)
+        except ReuseBlob, exception:
+            blob = exception.args[0]  # reuse the given blob
 
         self.storage.update({
             'filename': 'TODO',
@@ -33,6 +38,13 @@ class AnnotationsPdfStorage(object):
 
     def retrieve(self):
         return self.storage.get('blob')
+
+    @property
+    def size(self):
+        blob = openBlob(self.retrieve())
+        size = fstat(blob.fileno()).st_size
+        blob.close()
+        return size
 
     @property
     def status(self):
@@ -57,3 +69,4 @@ class AnnotationsPdfStorage(object):
     @token.setter
     def token(self, token):
         self.storage['token'] = token
+
