@@ -40,6 +40,13 @@ class AnnotationsPdfStorage(object):
         return self.storage.get('blob')
 
     @property
+    def data(self):
+        """Returns the blob content as a string.
+           This is highly inefficient as it loads the complete blob content
+           into memory."""
+        return openBlob(self.retrieve()).read()
+
+    @property
     def size(self):
         blob = openBlob(self.retrieve())
         size = fstat(blob.fileno()).st_size
@@ -69,4 +76,3 @@ class AnnotationsPdfStorage(object):
     @token.setter
     def token(self, token):
         self.storage['token'] = token
-
