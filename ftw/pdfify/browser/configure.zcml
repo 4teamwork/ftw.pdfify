@@ -17,7 +17,9 @@
       class=".maintenance.PdfifyMaintenanceView"
       permission="zope2.View"
       allowed_attributes="start_pdf_conversion
-                          pdf"
+                          pdf
+                          token
+                          status"
       />
 
 </configure>

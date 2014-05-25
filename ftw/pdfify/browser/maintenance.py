@@ -16,3 +16,12 @@ class PdfifyMaintenanceView(BrowserView):
         """Returns the pdf for the saved context."""
 
         return IPdf(self.context).pdf_download()
+
+    def token(self):
+        """Return current token."""
+        return IPdf(self.context).storage.token
+
+    def status(self):
+        """Return current conversion status."""
+        return IPdf(self.context).storage.status
+
