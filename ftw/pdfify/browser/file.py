@@ -29,6 +29,8 @@ class FileView(file_view.FileView):
         mtr = getToolByName(context, 'mimetypes_registry')
         pdf_mti = mtr.lookup('application/pdf')[0]
         pdf_icon = '%s/%s' % (utool(), pdf_mti.icon_path)
+        if isinstance(pdf_icon, unicode):
+            pdf_icon = pdf_icon.encode('utf8')
 
         return '<a href="%s/pdf_download"><img src="%s" />&nbsp;%s</a>' % (
             context.absolute_url(), pdf_icon, pdf.pdf_filename())
