@@ -84,17 +84,18 @@ class Pdf(object):
         self.storage.status = STATE_OK
         self.storage.store(data)
 
+    def pdf_filename(self):
+        base, ext = os.path.splitext(self.primary_value.filename)
+        return base + os.path.extsep + 'pdf'
+
     def pdf_download(self):
         blob = self.storage.retrieve()
         filename = blob._p_blob_uncommitted or blob.committed()
 
-        base, ext = os.path.splitext(self.primary_value.filename)
-        pdf_filename = base + os.path.extsep + 'pdf'
-      
         response = self.context.REQUEST.RESPONSE
         response.setHeader("Content-Type", 'application/pdf')
         response.setHeader("Content-Length", self.storage.size)
         response.setHeader("Content-disposition",
-                           'attachment; filename=%s' % pdf_filename)
+                           'attachment; filename=%s' % self.pdf_filename())
 
         return filestream_iterator(filename, 'rb')
