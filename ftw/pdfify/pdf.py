@@ -3,12 +3,14 @@ from ZPublisher.Iterators import filestream_iterator
 from ftw.pdfify import ASYNC_CONVERT_JOB
 from ftw.pdfify import STATE_CONVERTING
 from ftw.pdfify import STATE_OK
+from ftw.pdfify.events import PdfReadyEvent
 from ftw.pdfify.interfaces import IPdf
 from ftw.pdfify.interfaces import IPdfStorage
 from ftw.pdfify.interfaces import IPdfifyable
 from plone.rfc822.interfaces import IPrimaryFieldInfo
 from plone.uuid.interfaces import IUUID
 from zope.component import adapts
+from zope.event import notify
 from zope.interface import implements
 import hashlib
 import time
@@ -83,6 +85,7 @@ class Pdf(object):
         self.storage.store(data)
         self.storage.status = STATE_OK
         self.storage.store(data)
+        notify(PdfReadyEvent(self.context))
 
     def pdf_filename(self):
         base, ext = os.path.splitext(self.primary_value.filename)
