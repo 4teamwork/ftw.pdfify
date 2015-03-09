@@ -1,0 +1,25 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="ftw.pdfify">
+
+  <include package=".browser" />
+
+  <adapter factory=".pdf.Pdf" />
+  <adapter factory=".storage.AnnotationsPdfStorage" />
+
+
+  <class class="plone.app.blob.content.ATBlob">
+    <implements interface="ftw.pdfify.interfaces.IPdfifyable" />
+  </class>
+  <class class="ftw.file.content.file.File">
+    <implements interface="ftw.pdfify.interfaces.IPdfifyable" />
+  </class>
+
+  <subscriber
+      for="ftw.pdfify.interfaces.IPdfifyable
+           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".handlers.handle_pdf_conversion"
+      />
+
+</configure>
